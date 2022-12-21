@@ -1,0 +1,46 @@
+version: '3'
+services:
+  ############################
+  # Node app
+  ############################
+  nodeapp:
+    container_name: nest-movies-app
+    build:
+      context: .
+      target: development
+    command: yarn start:debug
+    ports:
+      - 3000:3000
+    depends_on:
+      neo4j:
+        condition: service_healthy
+    networks:
+      - nest
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+  ############################
+  # Neo4j Graph Database
+  ############################
+  neo4j:
+    container_name: nest-movies-neo4j
+    image: neo4j:5.3.0-community
+    networks:
+      - nest
+    environment:
+      - NEO4J_PLUGINS=["apoc"]
+      - NEO4J_AUTH=${NEO4J_USERNAME}/${NEO4J_PASSWORD}
+      - apoc.export.file.enabled=true
+      - apoc.import.file.enabled=true
+      - apoc.import.file.use_neo4j_config=true
+    ports:
+      - 7474:7474
+      - 7687:7687
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:7474']
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 10s
+networks:
+  nest:

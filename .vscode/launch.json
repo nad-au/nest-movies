@@ -1,0 +1,61 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug container",
+        "type": "node",
+        "request": "attach",
+        "remoteRoot": "/usr/src/app",
+        "localRoot": "${workspaceFolder}",
+        "port": 9229,
+        "restart": true,
+        "address": "0.0.0.0",
+        "skipFiles": [
+          "<node_internals>/**"
+        ]
+      },
+      {
+        "name": "Debug unit tests",
+        "type": "node",
+        "request": "launch",
+        "runtimeArgs": [
+          "--inspect-brk",
+          "${workspaceRoot}/node_modules/.bin/jest",
+          "--runInBand",
+          "--coverage",
+          "false"
+        ],
+        "console": "integratedTerminal"
+      },
+      {
+        "name": "Debug int. tests",
+        "type": "node",
+        "request": "launch",
+        "runtimeArgs": [
+          "--inspect-brk",
+          "${workspaceRoot}/node_modules/.bin/jest",
+          "--config",
+          "${workspaceRoot}/tests/int/jest.int.json",
+          "--runInBand",
+          "--coverage",
+          "false"
+        ],
+        "console": "integratedTerminal"
+      },
+      {
+        "name": "Debug e2e tests",
+        "type": "node",
+        "request": "launch",
+        "runtimeArgs": [
+          "--inspect-brk",
+          "${workspaceRoot}/node_modules/.bin/jest",
+          "--config",
+          "${workspaceRoot}/tests/e2e/jest.e2e.json",
+          "--runInBand",
+          "--coverage",
+          "false"
+        ],
+        "console": "integratedTerminal"
+      }
+    ]
+  }
