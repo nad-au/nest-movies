@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { map, mapArray, Neo4jService } from '@dbc-tech/nest-neo4j';
-import { ActorEntity } from './entities/ActorEntity';
-import { MovieEntity } from 'src/movies/entities/MovieEntity';
+import { Neo4jService } from '@dbc-tech/nest-neo4j';
+import { Actor } from './nodes/actor.node';
+import { nodeArrayProps, nodeProps } from 'src/utils/record-mapper';
+import { Movie } from 'src/movies/nodes/movie.node';
 
 export const allActors = `
   MATCH (actor:Person)
@@ -17,25 +18,22 @@ export const actorWithMovies = `
 export class ActorsService {
   constructor(private readonly neo4jService: Neo4jService) {}
 
-  async getActor(actorName: string): Promise<ActorEntity> {
+  async getActor(actorName: string): Promise<Actor> {
     const result = await this.neo4jService.read(actorWithMovies, {
       actorName,
     });
     if (result.records.length === 0) throw new NotFoundException();
 
     const record = result.records[0];
-    const actor = map(record, 'actor', ActorEntity);
-    actor.movies = mapArray(record, 'movies', MovieEntity);
+    const actor = nodeProps<Actor>(record, 'actor');
+    actor.movies = nodeArrayProps<Movie>(record, 'movies');
 
     return actor;
   }
 
-  async getAllActors(): Promise<ActorEntity[]> {
+  async getAllActors(): Promise<Actor[]> {
     const result = await this.neo4jService.read(allActors);
 
-    const actors = result.records.map((record) =>
-      map(record, 'actor', ActorEntity),
-    );
-    return actors;
+    return result.records.map((record) => nodeProps<Actor>(record, 'actor'));
   }
 }
