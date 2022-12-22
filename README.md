@@ -55,3 +55,29 @@ Delete all data (the entire db):
 ```bash
 curl -X DELETE localhost:3000/data
 ```
+
+## Debugging
+
+In debug mode your app is running outside of the container. For this reason you'll need to set the neo4j host to `localhost` instead of `neo4j` which is the service's host name when running in the compose network.
+
+Edit `.env` file and change to:
+
+```
+NEO4J_HOST=localhost
+```
+
+In vscode use debug auto-atach. `Ctrl-Shift-P`, Debug: Toggle Auto Attach, Smart.
+
+Start neo4j container:
+
+```bash
+yarn compose:neo4j
+```
+
+Start app in debug mode:
+
+```bash
+yarn start:debug
+```
+
+Should auto-attach and allow setting breakpoints etc.

@@ -20,7 +20,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "docker:prod": "node dist/main",
     "compose": "docker compose up",
-    "compose:down": "docker compose down"
+    "compose:down": "docker compose down",
+    "compose:neo4j": "docker compose -f docker-compose-neo4j.yml up",
+    "compose:neo4j:down": "docker compose -f docker-compose-neo4j.yml down"
   },
   "dependencies": {
     "@dbc-tech/nest-neo4j": "^0.5.0",

@@ -11,7 +11,7 @@ export class ActorsController {
   }
 
   @Get(':name')
-  getMovie(@Param('name') name: string) {
+  getActor(@Param('name') name: string) {
     return this.actorsService.getActor(name);
   }
 }
